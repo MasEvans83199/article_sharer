@@ -1,0 +1,40 @@
+<h1 class="mb-4">Users</h1>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr class="<%= 'table-warning' if user.has_role?(:admin) %>">
+          <td>
+            <%= user.email %>
+            <% if user.has_role?(:admin) %>
+              <i class="fas fa-crown text-warning"></i>
+            <% end %>
+          </td>
+          <td>
+            <% if user.has_role?(:moderator) %>
+              <%= 'Moderator' %>
+            <% elsif user.has_role?(:admin) %>
+              <%= 'Admin' %>
+            <% else %>
+              <%= 'User' %>
+            <% end %>
+          </td>
+          <td>
+            <% if user.has_role?(:moderator) %>
+              <%= button_to 'Remove Moderator', assign_role_user_path(user, role: 'remove_moderator'), method: :post, class: 'btn btn-warning btn-sm' %>
+            <% else %>
+              <%= button_to 'Assign Moderator', assign_role_user_path(user, role: 'moderator'), method: :post, class: 'btn btn-success btn-sm' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

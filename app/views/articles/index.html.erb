@@ -1,0 +1,146 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h4">Feed</h1>
+  <div>
+    <button id="toggleView" class="btn btn-outline-secondary">Switch to Row View</button>
+    <%= link_to 'New Article', new_article_path, class: 'btn btn-primary ml-2' %>
+    <div class="dropdown-custom">
+      <a href="#" class="btn btn-secondary" onclick="toggleSortDropdown(event)">Sort By &#9662;</a>
+      <div class="dropdown-content" id="sortMenu">
+        <%= link_to 'New to Old', articles_path(sort: 'new_to_old'), class: 'dropdown-item-custom' %>
+        <%= link_to 'Old to New', articles_path(sort: 'old_to_new'), class: 'dropdown-item-custom' %>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="articlesContainer" class="row">
+  <% @articles.each do |article| %>
+    <div class="col-md-6 mb-4 article-item">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">
+            <%= link_to article.title, article_path(article), class: "article-title-link" %>
+          </h5>      
+          <p>
+            <%= link_to article.link, article.link, target: '_blank', class: 'text-decoration-none' %>
+          </p>
+          <p class="card-text text-muted mb-0">
+            <strong><%= article.user.username %></strong>
+            <small>- <%= time_ago_in_words(article.created_at) %> ago</small>
+          </p>
+          <p>
+            <small class="badge bg-secondary float-right"><%= article.comments.count %> Comments</small>
+          </p>
+        </div>
+        <div class="card-footer text-right">
+         <!-- <%= button_to 'Vote', article_votes_path(article), method: :post, form: { class: 'd-inline' }, class: 'btn btn-sm btn-success' %>
+          <%= article.votes.count %>--!>
+          <% if user_signed_in? && (current_user == article.user || current_user.has_role?(:admin)) %>
+            <%= link_to 'Edit', edit_article_path(article), class: 'btn btn-sm btn-primary' %>
+            <%= link_to 'Destroy', article, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- Pagination Links -->
+<div class="d-flex justify-content-center mt-4">
+  <%= paginate @articles, class: 'pagination' %>
+</div>
+
+<style>
+      .dropdown-custom {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+      }
+
+      .dropdown-content .dropdown-item-custom {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown-content .dropdown-item-custom:hover {
+        background-color: #f1f1f1;
+      }
+
+      .dropdown-content.show {
+        display: block;
+      }
+    </style>
+
+<script>
+  document.addEventListener("turbolinks:load", function() {
+    const toggleButton = document.getElementById('toggleView');
+    const articlesContainer = document.getElementById('articlesContainer');
+    const articleItems = document.querySelectorAll('.article-item');
+
+    const newToggleButton = toggleButton.cloneNode(true);
+    toggleButton.parentNode.replaceChild(newToggleButton, toggleButton);
+    const viewMode = localStorage.getItem('viewMode') || 'grid';
+    if (viewMode === 'row') {
+      articlesContainer.classList.add('row-view');
+      articleItems.forEach(item => {
+        item.classList.replace('col-md-6', 'col-12');
+      });
+      newToggleButton.textContent = 'Switch to Grid View';
+    } else {
+      articlesContainer.classList.remove('row-view');
+      articleItems.forEach(item => {
+        item.classList.replace('col-12', 'col-md-6');
+      });
+      newToggleButton.textContent = 'Switch to Row View';
+    }
+
+    newToggleButton.addEventListener('click', function() {
+      if (articlesContainer.classList.contains('row-view')) {
+        articlesContainer.classList.remove('row-view');
+        articleItems.forEach(item => {
+          item.classList.replace('col-12', 'col-md-6');
+        });
+        newToggleButton.textContent = 'Switch to Row View';
+        localStorage.setItem('viewMode', 'grid');
+      } else {
+        articlesContainer.classList.add('row-view');
+        articleItems.forEach(item => {
+          item.classList.replace('col-md-6', 'col-12');
+        });
+        newToggleButton.textContent = 'Switch to Grid View';
+        localStorage.setItem('viewMode', 'row');
+      }
+    });
+  });
+</script>
+
+<script>
+function toggleSortDropdown(event) {
+  document.getElementById("sortMenu").classList.toggle("show");
+  event.stopPropagation();
+}
+
+window.onclick = function(event) {
+  if (!event.target.matches('.dropdown-custom a')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    for (var i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
+

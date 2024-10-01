@@ -1,0 +1,69 @@
+ @import "bootstrap";
+
+body {
+    background-color: #f8f9fa;
+  }
+  
+  .navbar {
+    margin-bottom: 20px;
+  }
+  
+  .card {
+    margin-bottom: 20px;
+  }
+  
+  .btn-link {
+    color: #007bff;
+  }
+  
+  .btn-danger {
+    margin-left: 5px;
+  }
+  
+.row-view .article-item {
+    width: 100%;
+  }
+
+.article-title-link {
+    color: black; 
+    text-decoration: none; 
+    transition: color 0.3s ease; 
+  }
+  
+  .article-title-link:hover {
+    color: gray; 
+    text-decoration: none; 
+  }
+  
+  .pagination .page-item .page-link {
+    color: #333; 
+  }
+  
+  .pagination .page-item.active .page-link {
+    background-color: #007bff; 
+    border-color: #007bff;
+    color: white; 
+  }
+  
+  .pagination .page-item .page-link:hover {
+    background-color: #e9ecef; 
+    color: #0056b3; 
+  }
+
+.form-label {
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-control {
+    margin-bottom: 1rem; 
+  }
+  
+
+.article-item .card-body h5 {
+    margin-bottom: 0;
+  }
+  
+  .article-item .card-body p {
+    margin-bottom: 0rem; 
+  }
+  
